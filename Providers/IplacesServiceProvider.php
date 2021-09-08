@@ -43,6 +43,7 @@ class IplacesServiceProvider extends ServiceProvider
         $this->publishConfig('iplaces', 'permissions');
         $this->publishConfig('iplaces', 'settings');
         $this->publishConfig('iplaces', 'config');
+        $this->publishConfig('iplaces', 'crud-fields');
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
     }
 
