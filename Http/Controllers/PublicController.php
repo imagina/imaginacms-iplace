@@ -107,7 +107,7 @@ class PublicController extends BasePublicController
 
             if (view()->exists($ttpl)) $tpl = $ttpl;
 
-            Return view($tpl, compact('place'));
+            Return view($tpl, compact('place','category'));
         }
 
         return abort(404);
