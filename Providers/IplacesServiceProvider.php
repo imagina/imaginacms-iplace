@@ -8,6 +8,7 @@ use Modules\Core\Traits\CanPublishConfiguration;
 use Modules\Core\Events\BuildingSidebar;
 use Modules\Core\Events\LoadingBackendTranslations;
 use Modules\Iplaces\Events\Handlers\RegisterIplacesSidebar;
+use Illuminate\Support\Facades\Blade;
 
 class IplacesServiceProvider extends ServiceProvider
 {
