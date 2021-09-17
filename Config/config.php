@@ -10,6 +10,9 @@ return [
     'place' => [
       'mainimage' => 'single',
       'gallery' => 'multiple'
+    ],
+    'category' => [
+      'mainimage' => 'single',
     ]
   ]
 ];
