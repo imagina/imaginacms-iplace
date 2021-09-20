@@ -71,10 +71,10 @@ class Category extends Model
       'mimeType' => 'image/jpeg',
       'path' =>url('modules/iblog/img/post/default.jpg')
     ];
-    return [
+    return json_decode(json_encode([
       'mimeType' => $thumbnail->mimetype,
       'path' => $thumbnail->path_string
-    ];
+    ]));
   }
 
     /**

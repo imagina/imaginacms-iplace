@@ -14,7 +14,8 @@ return [
     ],
     'category' => [
       'mainimage' => 'single',
-      'breadcrumbimage' => 'single'
-    ]
+      'breadcrumbimage' => 'single',
+      'gallery' => 'multiple'
+    ],
   ]
 ];

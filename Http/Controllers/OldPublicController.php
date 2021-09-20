@@ -86,7 +86,7 @@ class OldPublicController extends BasePublicController
         $schedules = $this->schedule->all();
         $categories = $this->category->all();
         $tpl = 'iplaces::frontend.index';
-        $ttpl = 'iplace.frontend.index';
+        $ttpl = 'iplaces.index';
 
         if (view()->exists($ttpl)) $tpl = $ttpl;
 
