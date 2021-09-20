@@ -9,7 +9,12 @@ return [
   'mediaFillable' => [
     'place' => [
       'mainimage' => 'single',
-      'gallery' => 'multiple'
+      'gallery' => 'multiple',
+      'breadcrumbimage' => 'single'
+    ],
+    'category' => [
+      'mainimage' => 'single',
+      'breadcrumbimage' => 'single'
     ]
   ]
 ];
