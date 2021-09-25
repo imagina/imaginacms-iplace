@@ -1,5 +1,7 @@
 <div class="place-layout place-item-layout-1">
-  <x-isite::edit-link link="{{$editLink}}{{$item->id}}" tooltip="{{$tooltipEditLink}}"/>
+  <div class="relative-position">
+    <x-isite::edit-link link="{{$editLink}}{{$item->id}}" tooltip="{{$tooltipEditLink}}"/>
+  </div>
   <a href="{{$item->url}}"><h4>{{$item->title}}</h4></a>
   @if(isset($item->options->addressIplace) && !empty($item->options->addressIplace))
     <x-isite::contact.addresses :addresses="$item->options->addressIplace"/>
