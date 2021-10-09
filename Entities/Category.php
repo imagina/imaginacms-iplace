@@ -130,5 +130,24 @@ class Category extends Model
     {
         return $query->whereStatus(Status::INACTIVE);
     }
+  public function getLftName()
+  {
+    return 'lft';
+  }
+
+  public function getRgtName()
+  {
+    return 'rgt';
+  }
+
+  public function getDepthName()
+  {
+    return 'depth';
+  }
+
+  public function getParentIdName()
+  {
+    return 'parent_id';
+  }
 
 }
