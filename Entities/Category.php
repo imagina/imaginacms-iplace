@@ -12,11 +12,12 @@ use Modules\Core\Traits\NamespacedEntity;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Media\Support\Traits\MediaRelation;
 use Modules\Media\Entities\File;
+use Kalnoy\Nestedset\NodeTrait;
 
 
 class Category extends Model
 {
-    use Translatable, PresentableTrait, NamespacedEntity, MediaRelation;
+    use Translatable, PresentableTrait, NamespacedEntity, MediaRelation, NodeTrait;
     //use Sluggable;
 
     protected $table = 'iplaces__categories';
@@ -129,5 +130,24 @@ class Category extends Model
     {
         return $query->whereStatus(Status::INACTIVE);
     }
+  public function getLftName()
+  {
+    return 'lft';
+  }
+
+  public function getRgtName()
+  {
+    return 'rgt';
+  }
+
+  public function getDepthName()
+  {
+    return 'depth';
+  }
+
+  public function getParentIdName()
+  {
+    return 'parent_id';
+  }
 
 }

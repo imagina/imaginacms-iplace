@@ -72,6 +72,24 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
           ->orWhere('updated_at', 'like', '%' . $filter->search . '%')
           ->orWhere('created_at', 'like', '%' . $filter->search . '%');
       }
+      //Filter by category ID
+      if (isset($filter->category) && !empty($filter->category)) {
+
+        $categories = Category::descendantsAndSelf($filter->category);
+
+        if ($categories->isNotEmpty()) {
+          $query->where(function ($query) use ($categories) {
+
+            $query->where(function ($query) use ($categories) {
+              $query->whereHas('categories', function ($query) use ($categories) {
+                $query->whereIn('iplace__place_category.category_id', $categories->pluck("id"));
+              })->orWhereIn('iplace__place.category_id', $categories->pluck("id"));
+            });
+          });
+
+        }
+      }
+
     }
 
     /*== FIELDS ==*/
