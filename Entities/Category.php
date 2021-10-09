@@ -12,6 +12,7 @@ use Modules\Core\Traits\NamespacedEntity;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Media\Support\Traits\MediaRelation;
 use Modules\Media\Entities\File;
+use Kalnoy\Nestedset\NodeTrait;
 
 
 class Category extends Model
