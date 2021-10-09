@@ -16,7 +16,7 @@ use Modules\Media\Entities\File;
 
 class Category extends Model
 {
-    use Translatable, PresentableTrait, NamespacedEntity, MediaRelation;
+    use Translatable, PresentableTrait, NamespacedEntity, MediaRelation, NodeTrait;
     //use Sluggable;
 
     protected $table = 'iplaces__categories';
