@@ -14,6 +14,7 @@ use Modules\Iplaces\Repositories\PlaceRepository;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Iplaces\Entities\Weather;
 use Illuminate\Support\Facades\Log;
+use Modules\Iplaces\Entities\Category;
 
 
 class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRepository
