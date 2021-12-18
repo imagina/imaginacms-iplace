@@ -26,10 +26,10 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
     $query = $this->model->query();
 
     /*== RELATIONSHIPS ==*/
-    if (in_array('*', $params->include)) {//If Request all relationships
+    if (in_array('*', $params->include ?? [])) {//If Request all relationships
       $query->with([]);
     } else {//Especific relationships
-      $includeDefault = [];//Default relationships
+      $includeDefault = ["translations","categories","files"];//Default relationships
       if (isset($params->include))//merge relations with default relationships
         $includeDefault = array_merge($includeDefault, $params->include);
       $query->with($includeDefault);//Add Relationships to query
@@ -83,8 +83,8 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
 
             $query->where(function ($query) use ($categories) {
               $query->whereHas('categories', function ($query) use ($categories) {
-                $query->whereIn('iplace__place_category.category_id', $categories->pluck("id"));
-              })->orWhereIn('iplace__place.category_id', $categories->pluck("id"));
+                $query->whereIn('iplaces__place_category.category_id', $categories->pluck("id"));
+              })->orWhereIn('category_id', $categories->pluck("id"));
             });
           });
 
@@ -113,10 +113,10 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
     $query = $this->model->query();
 
     /*== RELATIONSHIPS ==*/
-    if (in_array('*', $params->include)) {//If Request all relationships
+    if (in_array('*', $params->include ?? [])) {//If Request all relationships
       $query->with([]);
     } else {//Especific relationships
-      $includeDefault = [];//Default relationships
+      $includeDefault = ["translations","categories","files"];//Default relationships
       if (isset($params->include))//merge relations with default relationships
         $includeDefault = array_merge($includeDefault, $params->include);
       $query->with($includeDefault);//Add Relationships to query

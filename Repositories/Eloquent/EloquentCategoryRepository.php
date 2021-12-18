@@ -18,7 +18,7 @@ class EloquentCategoryRepository extends EloquentBaseRepository implements Categ
     $query = $this->model->query();
 
     /*== RELATIONSHIPS ==*/
-    if (in_array('*', $params->include)) {//If Request all relationships
+    if (in_array('*', $params->include ?? [])) {//If Request all relationships
       $query->with([]);
     } else {//Especific relationships
       $includeDefault = [];//Default relationships
@@ -55,6 +55,12 @@ class EloquentCategoryRepository extends EloquentBaseRepository implements Categ
           ->orWhere('updated_at', 'like', '%' . $filter->search . '%')
           ->orWhere('created_at', 'like', '%' . $filter->search . '%');
       }
+
+      //Parent Id
+      if (isset($filter->parentId)) {
+        !is_array($filter->parentId) ? $filter->parentId = [$filter->parentId] : false;
+        $query->whereIn('parent_id', $filter->parentId);
+      }
     }
 
     /*== FIELDS ==*/
@@ -77,7 +83,7 @@ class EloquentCategoryRepository extends EloquentBaseRepository implements Categ
     $query = $this->model->query();
 
     /*== RELATIONSHIPS ==*/
-    if (in_array('*', $params->include)) {//If Request all relationships
+    if (in_array('*', $params->include ?? [])) {//If Request all relationships
       $query->with([]);
     } else {//Especific relationships
       $includeDefault = [];//Default relationships
