@@ -58,8 +58,12 @@ class EloquentCategoryRepository extends EloquentBaseRepository implements Categ
 
       //Parent Id
       if (isset($filter->parentId)) {
-        !is_array($filter->parentId) ? $filter->parentId = [$filter->parentId] : false;
-        $query->whereIn('parent_id', $filter->parentId);
+        if (is_null($filter->parentId)) {
+          $query->whereNull("parent_id");
+        } else {
+          if (!is_array($filter->parentId)) $filter->parentId = [$filter->parentId];
+          $query->whereIn('parent_id', $filter->parentId);
+        }
       }
     }
 
@@ -69,9 +73,10 @@ class EloquentCategoryRepository extends EloquentBaseRepository implements Categ
 
     /*== REQUEST ==*/
     if (isset($params->page) && $params->page) {
-      return $query->paginate($params->take);
+      return $query->paginate($params->take, ['*'], null, $params->page);
     } else {
-      $params->take ? $query->take($params->take) : false;//Take
+      isset($params->take) && $params->take ? $query->take($params->take) : false;//Take
+
       return $query->get();
     }
   }

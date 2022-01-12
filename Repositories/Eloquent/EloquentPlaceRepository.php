@@ -84,7 +84,7 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
         $query->leftJoin(\DB::raw(
           "(SELECT MATCH (title) AGAINST ('(" . implode(" ", $words) . ") (" . $filter->search . ")' IN BOOLEAN MODE) scoreSearch, place_id, title " .
           "from iplaces__place_translations " .
-          "where `locale` = '{$filter->locale}') as ptrans"
+          "where `locale` = '".($filter->locale ?? locale())."') as ptrans"
         ), 'ptrans.place_id', 'iplaces__places.id')
           ->where('scoreSearch', '>', 0)
           ->orderBy('scoreSearch', 'desc');

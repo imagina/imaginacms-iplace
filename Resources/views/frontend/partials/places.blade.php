@@ -1,7 +1,7 @@
 {{--@php--}}
 {{--  $otherplaces = get_places(['exclude' => ['places' => $place->id]]);--}}
 {{--@endphp--}}
-<div class="places">
+<div class="other-places">
   <div class="col-12 pb-5">
     <hr class="my-5">
     <x-isite::carousel.owl-carousel
