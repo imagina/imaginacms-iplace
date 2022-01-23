@@ -75,6 +75,7 @@ class PlaceTransformer extends JsonResource
       'options' => $this->options,
       'schedules' => $this->schedules,
       'mediaFiles' => $this->mediaFiles(),
+      'rating' => $this->rating,
       //Relations
       'services' => ServiceTransformer::collection($this->whenLoaded('services')),
       'category' => new CategoryTransformer($this->whenLoaded('category')),
