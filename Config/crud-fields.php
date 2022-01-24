@@ -10,7 +10,7 @@ return [
       'fakeFieldName' => 'options',
       'isFakeField' => true,
       'props' => [
-        'label' => 'icustom::common.iplace.whatsapp1.code',
+        'label' => 'iplaces::common.crudFields.label-whatsapp1CallingCode',
       ],
       'loadOptions' => [
         'apiRoute' => 'apiRoutes.qlocations.countries', //apiRoute to request
@@ -25,7 +25,7 @@ return [
       'fakeFieldName' => 'options',
       'isFakeField' => true,
       'props' => [
-        'label' => 'icustom::common.iplace.whatsapp1.number',
+        'label' => 'iplaces::common.crudFields.label-whatsapp1Number',
         'type' => 'number',
       ]
     ],
@@ -37,7 +37,7 @@ return [
       'fakeFieldName' => 'options',
       'isFakeField' => true,
       'props' => [
-        'label' => 'icustom::common.iplace.whatsapp1.message',
+        'label' => 'iplaces::common.crudFields.label-whatsapp1Message',
       ]
     ],
     'whatsapp2CallingCode' => [
@@ -48,7 +48,7 @@ return [
       'fakeFieldName' => 'options',
       'isFakeField' => true,
       'props' => [
-        'label' => 'icustom::common.iplace.whatsapp2.code',
+        'label' => 'iplaces::common.crudFields.label-whatsapp2CallingCode',
       ],
       'loadOptions' => [
         'apiRoute' => 'apiRoutes.qlocations.countries', //apiRoute to request
@@ -63,7 +63,7 @@ return [
       'fakeFieldName' => 'options',
       'isFakeField' => true,
       'props' => [
-        'label' => 'icustom::common.iplace.whatsapp2.number',
+        'label' => 'iplaces::common.crudFields.label-whatsapp2Number',
         'type' => 'number',
       ]
     ],
@@ -75,7 +75,7 @@ return [
       'fakeFieldName' => 'options',
       'isFakeField' => true,
       'props' => [
-        'label' => 'icustom::common.iplace.whatsapp2.message',
+        'label' => 'iplaces::common.crudFields.label-whatsapp2Message',
       ]
     ],
     'addressIplace' => [
@@ -85,7 +85,7 @@ return [
       'fakeFieldName' => 'options',
       'isFakeField' => true,
       'props' => [
-        'label' => 'icustom::common.iplace.address',
+        'label' => 'iplaces::common.crudFields.label-addressIplace',
         'type' => 'text'
       ],
     ],
