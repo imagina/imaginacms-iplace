@@ -66,6 +66,17 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
         $orderWay = $filter->order->way ?? 'desc';//Default way
         $query->orderBy($orderByField, $orderWay);//Add order to query
       }
+  
+      // add filter by Categories Intersected 1 or more than 1, in array
+      if (isset($filter->categoriesIntersected) && !empty($filter->categoriesIntersected)) {
+        is_array($filter->categoriesIntersected) ? true : $filter->categoriesIntersected = [$filter->categoriesIntersected];
+        $query->where(function ($query) use ($filter) {
+          foreach ($filter->categoriesIntersected as $categoryId)
+            $query->whereHas('categories', function ($query) use ($categoryId) {
+              $query->where('iplaces__place_category.category_id', $categoryId);
+            });
+        });
+      }
 
       //New filter by search
       if (isset($filter->search) && !empty($filter->search)) {
