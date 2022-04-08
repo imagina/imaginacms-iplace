@@ -45,6 +45,8 @@ class IplacesServiceProvider extends ServiceProvider
         $this->publishConfig('iplaces', 'settings');
         $this->publishConfig('iplaces', 'config');
         $this->publishConfig('iplaces', 'crud-fields');
+        $this->mergeConfigFrom($this->getModuleConfigFilePath('iplaces', 'cmsPages'), "asgard.iplaces.cmsPages");
+        $this->mergeConfigFrom($this->getModuleConfigFilePath('iplaces', 'cmsSidebar'), "asgard.iplaces.cmsSidebar");
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
     }
 
