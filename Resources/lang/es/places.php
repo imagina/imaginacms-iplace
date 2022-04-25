@@ -11,6 +11,7 @@ return [
         'edit place' => 'Editar un lugar',
         'categories'=>'Categorias',
         'extra-fields' => 'Campos Extras',
+        'other-places' => '..Otros lugares que te pueden interesar...'
     ],
     'button' => [
         'create place' => 'Crear un lugar',

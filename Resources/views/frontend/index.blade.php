@@ -50,6 +50,26 @@
 
         <div class="container pl-lg-0">
             <div class="row">
+                {{-- Sidebar --}}
+                <div class="sidebar {{config('asgard.iplaces.config.customClassesToTheIndexCols.sidebar')}}">
+                    {{-- Custom Includes --}}
+                    @if(config("asgard.iplaces.config.customIncludesBeforeFilters"))
+                        @foreach(config("asgard.iplaces.config.customIncludesBeforeFilters") as $view)
+                            @include($view)
+                        @endforeach
+                    @endif
+                    <livewire:isite::filters :filters="config('asgard.iplaces.config.filters')"/>
+
+
+                    {{-- Custom Includes --}}
+                    @if(config("asgard.iplaces.config.customIncludesAfterFilters"))
+                        @foreach(config("asgard.iplaces.config.customIncludesAfterFilters") as $view)
+                            @include($view)
+                        @endforeach
+                    @endif
+                </div>
+
+            <div class="row">
                 <div class="col-12 mb-5">
                     <div class="row places-grid">
                         @if (isset($places) && !empty($places))
@@ -97,6 +117,8 @@
                         @endif
                     </div>
                 </div>
+
+
 
                 {{--<aside class="col-xl-3">
 

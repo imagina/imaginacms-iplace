@@ -18,7 +18,7 @@ class EloquentCategoryRepository extends EloquentBaseRepository implements Categ
     $query = $this->model->query();
 
     /*== RELATIONSHIPS ==*/
-    if (in_array('*', $params->include)) {//If Request all relationships
+    if (in_array('*', $params->include ?? [])) {//If Request all relationships
       $query->with([]);
     } else {//Especific relationships
       $includeDefault = [];//Default relationships
@@ -55,6 +55,16 @@ class EloquentCategoryRepository extends EloquentBaseRepository implements Categ
           ->orWhere('updated_at', 'like', '%' . $filter->search . '%')
           ->orWhere('created_at', 'like', '%' . $filter->search . '%');
       }
+
+      //Parent Id
+      if (isset($filter->parentId)) {
+        if (is_null($filter->parentId)) {
+          $query->whereNull("parent_id");
+        } else {
+          if (!is_array($filter->parentId)) $filter->parentId = [$filter->parentId];
+          $query->whereIn('parent_id', $filter->parentId);
+        }
+      }
     }
 
     /*== FIELDS ==*/
@@ -63,9 +73,10 @@ class EloquentCategoryRepository extends EloquentBaseRepository implements Categ
 
     /*== REQUEST ==*/
     if (isset($params->page) && $params->page) {
-      return $query->paginate($params->take);
+      return $query->paginate($params->take, ['*'], null, $params->page);
     } else {
-      $params->take ? $query->take($params->take) : false;//Take
+      isset($params->take) && $params->take ? $query->take($params->take) : false;//Take
+
       return $query->get();
     }
   }
@@ -77,7 +88,7 @@ class EloquentCategoryRepository extends EloquentBaseRepository implements Categ
     $query = $this->model->query();
 
     /*== RELATIONSHIPS ==*/
-    if (in_array('*', $params->include)) {//If Request all relationships
+    if (in_array('*', $params->include ?? [])) {//If Request all relationships
       $query->with([]);
     } else {//Especific relationships
       $includeDefault = [];//Default relationships

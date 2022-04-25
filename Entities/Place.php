@@ -64,7 +64,7 @@ class Place extends Model implements TaggableInterface
     'validated',
     'order',
     'options',
-    'schedules'
+    'schedules',
   ];
   protected $fakeColumns = ['options','address'];
   protected $presenter = PlacePresenter::class;

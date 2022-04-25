@@ -14,6 +14,7 @@ use Modules\Iplaces\Repositories\PlaceRepository;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Iplaces\Entities\Weather;
 use Illuminate\Support\Facades\Log;
+use Modules\Iplaces\Entities\Category;
 
 
 class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRepository
@@ -21,14 +22,15 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
 
   public function getItemsBy($params = false)
   {
+
     /*== initialize query ==*/
     $query = $this->model->query();
 
     /*== RELATIONSHIPS ==*/
-    if (in_array('*', $params->include)) {//If Request all relationships
+    if (in_array('*', $params->include ?? [])) {//If Request all relationships
       $query->with([]);
     } else {//Especific relationships
-      $includeDefault = [];//Default relationships
+      $includeDefault = ["translations","categories","files"];//Default relationships
       if (isset($params->include))//merge relations with default relationships
         $includeDefault = array_merge($includeDefault, $params->include);
       $query->with($includeDefault);//Add Relationships to query
@@ -64,13 +66,62 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
         $orderWay = $filter->order->way ?? 'desc';//Default way
         $query->orderBy($orderByField, $orderWay);//Add order to query
       }
+  
+      // add filter by Categories Intersected 1 or more than 1, in array
+      if (isset($filter->categoriesIntersected) && !empty($filter->categoriesIntersected)) {
+        is_array($filter->categoriesIntersected) ? true : $filter->categoriesIntersected = [$filter->categoriesIntersected];
+        $query->where(function ($query) use ($filter) {
+          foreach ($filter->categoriesIntersected as $categoryId)
+            $query->whereHas('categories', function ($query) use ($categoryId) {
+              $query->where('iplaces__place_category.category_id', $categoryId);
+            });
+        });
+      }
 
-      //add filter by search
-      if (isset($filter->search)) {
-        //find search in columns
-        $query->where('id', 'like', '%' . $filter->search . '%')
-          ->orWhere('updated_at', 'like', '%' . $filter->search . '%')
-          ->orWhere('created_at', 'like', '%' . $filter->search . '%');
+      //New filter by search
+      if (isset($filter->search) && !empty($filter->search)) {
+        // removing symbols used by MySQL
+        $filter->search = preg_replace("/[^a-zA-Z0-9]+/", " ", $filter->search);
+        $words = explode(" ", $filter->search);//Explode
+
+        //Validate words of minum 3 length
+        foreach ($words as $key => $word) {
+          if (strlen($word) >= 3) {
+            $words[$key] = '+' . $word . '*';
+          }
+        }
+
+        //Search query
+        $query->leftJoin(\DB::raw(
+          "(SELECT MATCH (title) AGAINST ('(" . implode(" ", $words) . ") (" . $filter->search . ")' IN BOOLEAN MODE) scoreSearch, place_id, title " .
+          "from iplaces__place_translations " .
+          "where `locale` = '".($filter->locale ?? locale())."') as ptrans"
+        ), 'ptrans.place_id', 'iplaces__places.id')
+          ->where('scoreSearch', '>', 0)
+          ->orderBy('scoreSearch', 'desc');
+
+        //Remove order by
+        unset($filter->order);
+       // dd($params,$filter->search,$query ,$words);
+      }
+
+
+      //Filter by category ID
+      if (isset($filter->category) && !empty($filter->category)) {
+
+        $categories = Category::descendantsAndSelf($filter->category);
+
+        if ($categories->isNotEmpty()) {
+          $query->where(function ($query) use ($categories) {
+
+            $query->where(function ($query) use ($categories) {
+              $query->whereHas('categories', function ($query) use ($categories) {
+                $query->whereIn('iplaces__place_category.category_id', $categories->pluck("id"));
+              })->orWhereIn('category_id', $categories->pluck("id"));
+            });
+          });
+
+        }
       }
     }
 
@@ -83,6 +134,7 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
       return $query->paginate($params->take);
     } else {
       $params->take ? $query->take($params->take) : false;//Take
+
       return $query->get();
     }
   }
@@ -94,10 +146,10 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
     $query = $this->model->query();
 
     /*== RELATIONSHIPS ==*/
-    if (in_array('*', $params->include)) {//If Request all relationships
+    if (in_array('*', $params->include ?? [])) {//If Request all relationships
       $query->with([]);
     } else {//Especific relationships
-      $includeDefault = [];//Default relationships
+      $includeDefault = ["translations","categories","files"];//Default relationships
       if (isset($params->include))//merge relations with default relationships
         $includeDefault = array_merge($includeDefault, $params->include);
       $query->with($includeDefault);//Add Relationships to query

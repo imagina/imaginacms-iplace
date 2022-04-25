@@ -8,6 +8,7 @@ use Modules\Core\Traits\CanPublishConfiguration;
 use Modules\Core\Events\BuildingSidebar;
 use Modules\Core\Events\LoadingBackendTranslations;
 use Modules\Iplaces\Events\Handlers\RegisterIplacesSidebar;
+use Illuminate\Support\Facades\Blade;
 
 class IplacesServiceProvider extends ServiceProvider
 {
@@ -44,6 +45,8 @@ class IplacesServiceProvider extends ServiceProvider
         $this->publishConfig('iplaces', 'settings');
         $this->publishConfig('iplaces', 'config');
         $this->publishConfig('iplaces', 'crud-fields');
+        $this->mergeConfigFrom($this->getModuleConfigFilePath('iplaces', 'cmsPages'), "asgard.iplaces.cmsPages");
+        $this->mergeConfigFrom($this->getModuleConfigFilePath('iplaces', 'cmsSidebar'), "asgard.iplaces.cmsSidebar");
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
     }
 
