@@ -83,7 +83,10 @@ class PlaceTransformer extends JsonResource
       'province' => new ProvinceTransformer($this->whenLoaded('province')),
       'city' => new CityTransformer($this->whenLoaded('city')),
     ];
-
+  
+    foreach ($this->tags as $tag) {
+      $data['tags'][] = $tag->name;
+    }
 
     $filter = json_decode($request->filter);
 

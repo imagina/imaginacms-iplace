@@ -19,10 +19,12 @@ use Modules\Ilocations\Entities\Province;
 use Modules\Iplaces\Entities\Range;
 use Modules\Media\Support\Traits\MediaRelation;
 use Modules\Media\Entities\File;
+use Modules\Tag\Contracts\TaggableInterface;
+use Modules\Tag\Traits\TaggableTrait;
 
-class Place extends Model
+class Place extends Model implements TaggableInterface
 {
-  use Translatable, PresentableTrait, NamespacedEntity, MediaRelation;
+  use Translatable, TaggableTrait, PresentableTrait, NamespacedEntity, MediaRelation;
 
   protected $table = 'iplaces__places';
   public $translatedAttributes = [
