@@ -90,12 +90,14 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
                   ->orWhere('description', 'like', '%' . $filter->search . '%');
           
                 $words = explode(' ', trim($filter->search));
-                foreach ($words as $index => $word) {
-                  if(strlen($word) >= $filter->minCharactersSearch ?? 3){
-                    $query->orWhere('title', 'like', "%" . $word . "%")
-                      ->orWhere('description', 'like', "%" . $word . "%");
-                  }
-                }//foreach
+  
+                if(count($words)>1)
+                  foreach ($words as $index => $word) {
+                    if(strlen($word) >= ($filter->minCharactersSearch ?? 3)){
+                      $query->orWhere('title', 'like', "%" . $word . "%")
+                        ->orWhere('description', 'like', "%" . $word . "%");
+                    }
+                  }//foreach
           
               });
       
