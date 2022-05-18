@@ -17,60 +17,83 @@ use Kalnoy\Nestedset\NodeTrait;
 
 class Category extends Model
 {
-    use Translatable, PresentableTrait, NamespacedEntity, MediaRelation, NodeTrait;
-    //use Sluggable;
+  use Translatable, PresentableTrait, NamespacedEntity, MediaRelation, NodeTrait;
 
-    protected $table = 'iplaces__categories';
-    public $translatedAttributes = ['title', 'description', 'slug','meta_title','meta_description','meta_keywords'];
-    protected $fillable = ['title', 'description', 'slug', 'parent_id', 'options','status','meta_title','meta_description','meta_keywords'];
-    protected $fakeColumns = ['options'];
-    protected $presenter = CategoryPresenter::class;
+  //use Sluggable;
+
+  protected $table = 'iplaces__categories';
+  public $translatedAttributes = ['title',
+    'description',
+    'slug',
+    'meta_title',
+    'meta_description',
+    'meta_keywords'
+  ];
+
+  protected $fillable = [
+    'title',
+    'description',
+    'slug',
+    'parent_id',
+    'options',
+    'status',
+    'sort_order',
+    'featured',
+    'meta_title',
+    'meta_description',
+    'meta_keywords'
+  ];
+
+  protected $fakeColumns = ['options'];
+
+  protected $presenter = CategoryPresenter::class;
 
 
-    protected $casts = [
-        'options' => 'array'
-    ];
+  protected $casts = [
+    'options' => 'array'
+  ];
 
-    /*
-     * ---------
-     * RELATIONS
-     * ---------
-     */
-    public function parent()
-    {
-        return $this->belongsTo('Modules\Iplaces\Entities\Category', 'parent_id');
-    }
+  /*
+   * ---------
+   * RELATIONS
+   * ---------
+   */
+  public function parent()
+  {
+    return $this->belongsTo('Modules\Iplaces\Entities\Category', 'parent_id');
+  }
 
-    public function children()
-    {
-        return $this->hasMany('Modules\Iplaces\Entities\Category', 'parent_id');
-    }
+  public function children()
+  {
+    return $this->hasMany('Modules\Iplaces\Entities\Category', 'parent_id');
+  }
 
-    public function places()
-    {
-        return $this->belongsToMany(Place::class, 'iplaces__place_category');
-    }
+  public function places()
+  {
+    return $this->belongsToMany(Place::class, 'iplaces__place_category');
+  }
 
-    //generar url automatica
-    /* public function sluggable()
-     {
-         return [
-             'slug' => [
-                 'source' => 'title'
-             ]
-         ];
-     }*/
-    /*
-     * -------------
-     * IMAGE
-     * -------------
-     */
-  public function getMainImageAttribute(){
+  //generar url automatica
+  /* public function sluggable()
+   {
+       return [
+           'slug' => [
+               'source' => 'title'
+           ]
+       ];
+   }*/
+  /*
+   * -------------
+   * IMAGE
+   * -------------
+   */
+  public function getMainImageAttribute()
+  {
 
     $thumbnail = $this->files()->where('zone', 'mainimage')->first();
-    if(!$thumbnail) return [
+    if (!$thumbnail) return [
       'mimeType' => 'image/jpeg',
-      'path' =>url('modules/iblog/img/post/default.jpg')
+      'path' => url('modules/iblog/img/post/default.jpg')
     ];
     return json_decode(json_encode([
       'mimeType' => $thumbnail->mimetype,
@@ -78,16 +101,17 @@ class Category extends Model
     ]));
   }
 
-    /**
-     * @return mixed
-     */
+  /**
+   * @return mixed
+   */
 
-    public function getUrlAttribute() {
+  public function getUrlAttribute()
+  {
 
-        $locale = \LaravelLocalization::setLocale() ?: \App::getLocale();
+    $locale = \LaravelLocalization::setLocale() ?: \App::getLocale();
 
-        return  \URL::route($locale.'.iplaces.place.category', [$this->slug]);
-    }
+    return \URL::route($locale . '.iplaces.place.category', [$this->slug]);
+  }
 
   public function getOptionsAttribute($value)
   {
@@ -99,37 +123,38 @@ class Category extends Model
 
   }
 
-    /*
-   |--------------------------------------------------------------------------
-   | SCOPES
-   |--------------------------------------------------------------------------
+  /*
+ |--------------------------------------------------------------------------
+ | SCOPES
+ |--------------------------------------------------------------------------
+ */
+  public function scopeFirstLevelItems($query)
+  {
+    return $query->where('depth', '1')
+      ->orWhere('depth', null)
+      ->orderBy('lft', 'ASC');
+  }
+
+  /**
+   * Check if the post is in draft
+   * @param Builder $query
+   * @return Builder
    */
-    public function scopeFirstLevelItems($query)
-    {
-        return $query->where('depth', '1')
-            ->orWhere('depth', null)
-            ->orderBy('lft', 'ASC');
-    }
+  public function scopeActive(Builder $query)
+  {
+    return $query->whereStatus(Status::ACTIVE);
+  }
 
-    /**
-     * Check if the post is in draft
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeActive(Builder $query)
-    {
-        return $query->whereStatus(Status::ACTIVE);
-    }
+  /**
+   * Check if the post is pending review
+   * @param Builder $query
+   * @return Builder
+   */
+  public function scopeInactive(Builder $query)
+  {
+    return $query->whereStatus(Status::INACTIVE);
+  }
 
-    /**
-     * Check if the post is pending review
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeInactive(Builder $query)
-    {
-        return $query->whereStatus(Status::INACTIVE);
-    }
   public function getLftName()
   {
     return 'lft';

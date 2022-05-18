@@ -31,6 +31,11 @@ class EloquentCategoryRepository extends EloquentBaseRepository implements Categ
     if (isset($params->filter)) {
       $filter = $params->filter;//Short filter
 
+      if (isset($filter->id)) {
+        !is_array($filter->id) ? $filter->id = [$filter->id] : false;
+        $query->whereIn('iplaces__categories.id', $filter->id);
+      }
+
       //Filter by date
       if (isset($filter->date)) {
         $date = $filter->date;//Short filter date
@@ -39,6 +44,10 @@ class EloquentCategoryRepository extends EloquentBaseRepository implements Categ
           $query->whereDate($date->field, '>=', $date->from);
         if (isset($date->to))//to a date
           $query->whereDate($date->field, '<=', $date->to);
+      }
+
+      if (isset($filter->tagId)) {
+        $query->whereTag($filter->tagId, "id");
       }
 
       //Order by
@@ -65,6 +74,26 @@ class EloquentCategoryRepository extends EloquentBaseRepository implements Categ
           $query->whereIn('parent_id', $filter->parentId);
         }
       }
+    }
+
+    // ORDER
+    if (isset($params->order) && $params->order) {
+
+      $order = is_array($params->order) ? $params->order : [$params->order];
+
+      foreach ($order as $orderObject) {
+
+        if (isset($orderObject->field) && isset($orderObject->way)) {
+          if (in_array($orderObject->field, $this->model->translatedAttributes)) {
+            $query->join('iplaces__category_translations as translations', 'translations.category_id', 'iplaces__categories.id');
+            $query->orderBy("translations.$orderObject->field", $orderObject->way);
+          } else
+            $query->orderBy($orderObject->field, $orderObject->way);
+        }
+
+      }
+    } else {
+      $query->orderBy('sort_order', 'asc');//Add order to query
     }
 
     /*== FIELDS ==*/
@@ -115,10 +144,10 @@ class EloquentCategoryRepository extends EloquentBaseRepository implements Categ
 
   public function create($data)
   {
-      $category= $this->model->create($data);
-      event(new CategoryWasCreated($category, $data));
-    event(new CreateMedia($category,$data));
-      return $this->find($category->id);
+    $category = $this->model->create($data);
+    event(new CategoryWasCreated($category, $data));
+    event(new CreateMedia($category, $data));
+    return $this->find($category->id);
   }
 
 
@@ -140,7 +169,7 @@ class EloquentCategoryRepository extends EloquentBaseRepository implements Categ
     $model = $query->where($field ?? 'id', $criteria)->first();
 
     $model ? $model->update((array)$data) : false;
-    event(new UpdateMedia($model,$data));
+    event(new UpdateMedia($model, $data));
   }
 
   public function deleteBy($criteria, $params = false)
