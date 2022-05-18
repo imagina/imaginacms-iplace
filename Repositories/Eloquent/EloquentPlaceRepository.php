@@ -80,6 +80,39 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
 
       //New filter by search
       if (isset($filter->search) && !empty($filter->search)) {
+
+        //find search in columns
+        $query->where(function ($query) use ($filter) {
+          $query->whereHas('translations', function ($query) use ($filter) {
+            $query->where('locale', $filter->locale ?? locale())
+              ->where(function ($query) use ($filter) {
+                $query->where('title', 'like', '%' . $filter->search . '%')
+                  ->orWhere('description', 'like', '%' . $filter->search . '%');
+          
+                $words = explode(' ', trim($filter->search));
+  
+                if(count($words)>1)
+                  foreach ($words as $index => $word) {
+                    if(strlen($word) >= ($filter->minCharactersSearch ?? 3)){
+                      $query->orWhere('title', 'like', "%" . $word . "%")
+                        ->orWhere('description', 'like', "%" . $word . "%");
+                    }
+                  }//foreach
+          
+              });
+      
+          })->orWhere(function ($query) use ($filter){
+      
+            $query->whereTag($filter->search,'name');
+          })
+      
+            ->orWhere('iplaces__places.id', 'like', '%' . $filter->search . '%')
+            ->orWhere('updated_at', 'like', '%' . $filter->search . '%')
+            ->orWhere('created_at', 'like', '%' . $filter->search . '%');
+        });
+  
+        /*
+  
         // removing symbols used by MySQL
         $filter->search = preg_replace("/[^a-zA-Z0-9]+/", " ", $filter->search);
         $words = explode(" ", $filter->search);//Explode
@@ -93,7 +126,9 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
 
         //Search query
         $query->leftJoin(\DB::raw(
-          "(SELECT MATCH (title) AGAINST ('(" . implode(" ", $words) . ") (" . $filter->search . ")' IN BOOLEAN MODE) scoreSearch, place_id, title " .
+          "(SELECT MATCH (title) AGAINST ('(" . implode(" ", $words) . ") (" . $filter->search . ")' IN BOOLEAN MODE) scoreSearch,
+          
+          place_id, title " .
           "from iplaces__place_translations " .
           "where `locale` = '".($filter->locale ?? locale())."') as ptrans"
         ), 'ptrans.place_id', 'iplaces__places.id')
@@ -102,6 +137,7 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
 
         //Remove order by
         unset($filter->order);
+        */
        // dd($params,$filter->search,$query ,$words);
       }
 
@@ -128,15 +164,17 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
         $query->whereTag($filter->tagId, "id");
       }
     }
-
+ 
     /*== FIELDS ==*/
     if (isset($params->fields) && count($params->fields))
       $query->select($params->fields);
 
     /*== REQUEST ==*/
     if (isset($params->page) && $params->page) {
+
       return $query->paginate($params->take);
     } else {
+      
       isset($params->take) && $params->take ? $query->take($params->take) : false;//Take
 
       return $query->get();
