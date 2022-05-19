@@ -159,6 +159,10 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
 
         }
       }
+
+      if (isset($filter->tagId)) {
+        $query->whereTag($filter->tagId, "id");
+      }
     }
  
     /*== FIELDS ==*/
@@ -170,8 +174,9 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
 
       return $query->paginate($params->take);
     } else {
-      $params->take ? $query->take($params->take) : false;//Take
- 
+      
+      isset($params->take) && $params->take ? $query->take($params->take) : false;//Take
+
       return $query->get();
     }
   }
