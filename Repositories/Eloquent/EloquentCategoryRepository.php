@@ -8,6 +8,7 @@ use Modules\Ihelpers\Events\UpdateMedia;
 use Modules\Iplaces\Repositories\CategoryRepository;
 use Modules\Core\Repositories\Eloquent\EloquentBaseRepository;
 use Modules\Iplaces\Events\CategoryWasCreated;
+use Modules\Iplaces\Entities\Category;
 
 class EloquentCategoryRepository extends EloquentBaseRepository implements CategoryRepository
 {
@@ -30,10 +31,21 @@ class EloquentCategoryRepository extends EloquentBaseRepository implements Categ
     /*== FILTERS ==*/
     if (isset($params->filter)) {
       $filter = $params->filter;//Short filter
-
       if (isset($filter->id)) {
-        !is_array($filter->id) ? $filter->id = [$filter->id] : false;
-        $query->whereIn('iplaces__categories.id', $filter->id);
+
+        $ids = is_array($filter->id) ? $filter->id : [$filter->id];
+
+        if (isset($filter->includeDescendants) && $filter->includeDescendants) {
+          foreach ($ids as $id) {
+            if (isset($filter->includeSelf) && $filter->includeSelf) {
+              $categories = Category::descendantsAndSelf($id);
+            } else {
+              $categories = Category::descendantsOf($id);
+            }
+            $ids = array_merge($ids, $categories->pluck("id")->toArray());
+          }
+        }
+        $query->whereIn('iplaces__categories.id', $ids);
       }
 
       //Filter by date
