@@ -163,6 +163,11 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
       if (isset($filter->tagId)) {
         $query->whereTag($filter->tagId, "id");
       }
+
+      if (isset($filter->status) && !empty($filter->status)) {
+        $query->whereStatus($filter->status);
+      }
+
     }
  
     /*== FIELDS ==*/
