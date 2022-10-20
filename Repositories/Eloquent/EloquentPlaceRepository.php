@@ -40,6 +40,11 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
     if (isset($params->filter)) {
       $filter = $params->filter;//Short filter
 
+      if (isset($filter->Id)) {
+        !is_array($filter->Id) ? $filter->Id = [$filter->Id] : false;
+        $query->whereIn('id', $filter->Id);
+      }
+
       // add filter by Categories 1 or more than 1, in array
       if (isset($filter->categories) && !empty($filter->categories)) {
           is_array($filter->categories) ? true : $filter->categories = [$filter->categories];
@@ -155,6 +160,15 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
 
         }
       }
+
+      if (isset($filter->tagId)) {
+        $query->whereTag($filter->tagId, "id");
+      }
+
+      if (isset($filter->status) && !empty($filter->status)) {
+        $query->whereStatus($filter->status);
+      }
+
     }
  
     /*== FIELDS ==*/
@@ -166,8 +180,9 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
 
       return $query->paginate($params->take);
     } else {
-      $params->take ? $query->take($params->take) : false;//Take
- 
+      
+      isset($params->take) && $params->take ? $query->take($params->take) : false;//Take
+
       return $query->get();
     }
   }

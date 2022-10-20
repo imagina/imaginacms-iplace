@@ -24,7 +24,7 @@ use Modules\Tag\Traits\TaggableTrait;
 
 class Place extends Model implements TaggableInterface
 {
-  use Translatable, TaggableTrait, PresentableTrait, NamespacedEntity, MediaRelation;
+  use Translatable, PresentableTrait, NamespacedEntity, MediaRelation, TaggableTrait;
 
   protected $table = 'iplaces__places';
   public $translatedAttributes = [
@@ -57,6 +57,8 @@ class Place extends Model implements TaggableInterface
     'schedule_id',
     'gama',
     'quantity_person',
+    'sort_order',
+    'featured',
     'weather',
     'housing',
     'transport',
