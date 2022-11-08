@@ -27,6 +27,10 @@ if (!function_exists('get_places')) {
 
     $places = Place::with(['user','category']);
 
+    if (!empty($options['id'])) {
+      $places->where('id', $options['id']);
+    }
+
     if (!empty($options['categories'])) {
       $places->whereHas('categories', function ($query) use ($options) {
         $query->whereIn('category_id', $options['categories']);

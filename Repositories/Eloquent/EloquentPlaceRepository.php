@@ -40,13 +40,17 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
     if (isset($params->filter)) {
       $filter = $params->filter;//Short filter
 
+      if (isset($filter->Id)) {
+        !is_array($filter->Id) ? $filter->Id = [$filter->Id] : false;
+        $query->whereIn('id', $filter->Id);
+      }
+
       // add filter by Categories 1 or more than 1, in array
       if (isset($filter->categories) && !empty($filter->categories)) {
           is_array($filter->categories) ? true : $filter->categories = [$filter->categories];
           $query->where(function ($query) use ($filter) {
-              $query->whereHas('categories', function ($query) use ($filter) {
-                  $query->whereIn('iplaces__place_category.category_id', $filter->categories);
-              })->orWhereIn('category_id', $filter->categories);
+            $query->whereRaw("iplaces__places.id IN (SELECT place_id from iplaces__place_category where category_id IN (".(join(",",$filter->categories->pluck("id")->toArray()))."))")
+              ->orWhereIn('iplaces__places.category_id', $filter->categories->pluck("id"));
           });
       }
 
@@ -72,9 +76,7 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
         is_array($filter->categoriesIntersected) ? true : $filter->categoriesIntersected = [$filter->categoriesIntersected];
         $query->where(function ($query) use ($filter) {
           foreach ($filter->categoriesIntersected as $categoryId)
-            $query->whereHas('categories', function ($query) use ($categoryId) {
-              $query->where('iplaces__place_category.category_id', $categoryId);
-            });
+            $query->whereRaw("iplaces__places.id IN (SELECT place_id from iplaces__place_category where category_id = $categoryId)");
         });
       }
 
@@ -151,9 +153,8 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
           $query->where(function ($query) use ($categories) {
 
             $query->where(function ($query) use ($categories) {
-              $query->whereHas('categories', function ($query) use ($categories) {
-                $query->whereIn('iplaces__place_category.category_id', $categories->pluck("id"));
-              })->orWhereIn('category_id', $categories->pluck("id"));
+              $query->whereRaw("iplaces__places.id IN (SELECT place_id from iplaces__place_category where category_id IN (".(join(",",$categories->pluck("id")->toArray()))."))")
+                ->orWhereIn('iplaces__places.category_id', $categories->pluck("id"));
             });
           });
 
@@ -163,6 +164,11 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
       if (isset($filter->tagId)) {
         $query->whereTag($filter->tagId, "id");
       }
+
+      if (isset($filter->status) && !empty($filter->status)) {
+        $query->whereStatus($filter->status);
+      }
+
     }
  
     /*== FIELDS ==*/
