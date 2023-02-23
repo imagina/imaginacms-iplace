@@ -30,7 +30,7 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
     if (in_array('*', $params->include ?? [])) {//If Request all relationships
       $query->with([]);
     } else {//Especific relationships
-      $includeDefault = ["translations","categories","files"];//Default relationships
+      $includeDefault = ["translations", "categories", "files"];//Default relationships
       if (isset($params->include))//merge relations with default relationships
         $includeDefault = array_merge($includeDefault, $params->include);
       $query->with($includeDefault);//Add Relationships to query
@@ -47,11 +47,11 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
 
       // add filter by Categories 1 or more than 1, in array
       if (isset($filter->categories) && !empty($filter->categories)) {
-          is_array($filter->categories) ? true : $filter->categories = [$filter->categories];
-          $query->where(function ($query) use ($filter) {
-            $query->whereRaw("iplaces__places.id IN (SELECT place_id from iplaces__place_category where category_id IN (".(join(",",$filter->categories->pluck("id")->toArray()))."))")
-              ->orWhereIn('iplaces__places.category_id', $filter->categories->pluck("id"));
-          });
+        is_array($filter->categories) ? true : $filter->categories = [$filter->categories];
+        $query->where(function ($query) use ($filter) {
+          $query->whereRaw("iplaces__places.id IN (SELECT place_id from iplaces__place_category where category_id IN (" . (join(",", $filter->categories->pluck("id")->toArray())) . "))")
+            ->orWhereIn('iplaces__places.category_id', $filter->categories->pluck("id"));
+        });
       }
 
       //Filter by date
@@ -70,7 +70,7 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
         $orderWay = $filter->order->way ?? 'desc';//Default way
         $query->orderBy($orderByField, $orderWay);//Add order to query
       }
-  
+
       // add filter by Categories Intersected 1 or more than 1, in array
       if (isset($filter->categoriesIntersected) && !empty($filter->categoriesIntersected)) {
         is_array($filter->categoriesIntersected) ? true : $filter->categoriesIntersected = [$filter->categoriesIntersected];
@@ -90,29 +90,28 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
               ->where(function ($query) use ($filter) {
                 $query->where('title', 'like', '%' . $filter->search . '%')
                   ->orWhere('description', 'like', '%' . $filter->search . '%');
-          
+
                 $words = explode(' ', trim($filter->search));
-  
-                if(count($words)>1)
+
+                if (count($words) > 1)
                   foreach ($words as $index => $word) {
-                    if(strlen($word) >= ($filter->minCharactersSearch ?? 3)){
+                    if (strlen($word) >= ($filter->minCharactersSearch ?? 3)) {
                       $query->orWhere('title', 'like', "%" . $word . "%")
                         ->orWhere('description', 'like', "%" . $word . "%");
                     }
                   }//foreach
-          
+
               });
-      
-          })->orWhere(function ($query) use ($filter){
-      
-            $query->whereTag($filter->search,'name');
+
+          })->orWhere(function ($query) use ($filter) {
+
+            $query->whereTag($filter->search, 'name');
           })
-      
             ->orWhere('iplaces__places.id', 'like', '%' . $filter->search . '%')
             ->orWhere('updated_at', 'like', '%' . $filter->search . '%')
             ->orWhere('created_at', 'like', '%' . $filter->search . '%');
         });
-  
+
         /*
   
         // removing symbols used by MySQL
@@ -140,7 +139,7 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
         //Remove order by
         unset($filter->order);
         */
-       // dd($params,$filter->search,$query ,$words);
+        // dd($params,$filter->search,$query ,$words);
       }
 
 
@@ -153,7 +152,7 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
           $query->where(function ($query) use ($categories) {
 
             $query->where(function ($query) use ($categories) {
-              $query->whereRaw("iplaces__places.id IN (SELECT place_id from iplaces__place_category where category_id IN (".(join(",",$categories->pluck("id")->toArray()))."))")
+              $query->whereRaw("iplaces__places.id IN (SELECT place_id from iplaces__place_category where category_id IN (" . (join(",", $categories->pluck("id")->toArray())) . "))")
                 ->orWhereIn('iplaces__places.category_id', $categories->pluck("id"));
             });
           });
@@ -170,7 +169,7 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
       }
 
     }
- 
+
     /*== FIELDS ==*/
     if (isset($params->fields) && count($params->fields))
       $query->select($params->fields);
@@ -180,7 +179,7 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
 
       return $query->paginate($params->take);
     } else {
-      
+
       isset($params->take) && $params->take ? $query->take($params->take) : false;//Take
 
       return $query->get();
@@ -197,7 +196,7 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
     if (in_array('*', $params->include ?? [])) {//If Request all relationships
       $query->with([]);
     } else {//Especific relationships
-      $includeDefault = ["translations","categories","files"];//Default relationships
+      $includeDefault = ["translations", "categories", "files"];//Default relationships
       if (isset($params->include))//merge relations with default relationships
         $includeDefault = array_merge($includeDefault, $params->include);
       $query->with($includeDefault);//Add Relationships to query
@@ -221,13 +220,14 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
 
   public function create($data)
   {
-      // dd($data);
-      $place = $this->model->create($data);
-      event(new PlaceWasCreated($place, $data));
-      $place->categories()->sync(Arr::get($data, 'categories', []));
-      $place->services()->sync(Arr::get($data, 'services', []));
-      $place->spaces()->sync(Arr::get($data, 'spaces', []));
-      event(new CreateMedia($place,$data));
+    // dd($data);
+    $place = $this->model->create($data);
+    event(new PlaceWasCreated($place, $data));
+    $place->categories()->sync(Arr::get($data, 'categories', []));
+    $place->services()->sync(Arr::get($data, 'services', []));
+    $place->spaces()->sync(Arr::get($data, 'spaces', []));
+    event(new CreateMedia($place, $data));
+    $place->setTags(Arr::get($data, 'tags', []));
   }
 
 
@@ -247,10 +247,11 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
 
     /*== REQUEST ==*/
     $model = $query->where($field ?? 'id', $criteria)->first();
-    if($model){
+    if ($model) {
       $model->update((array)$data);
       $model->categories()->sync(Arr::get($data, 'categories', []));
-      event(new UpdateMedia($model,$data));
+      event(new UpdateMedia($model, $data));
+      $model->setTags(Arr::get($data, 'tags', []));
     }
 
 
@@ -273,45 +274,46 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
     $model = $query->where($field ?? 'id', $criteria)->first();
     $model ? $model->delete() : false;
     event(new DeleteMedia($model->id, get_class($model)));
+
   }
 
-    public function update($model, $data)
-    {
+  public function update($model, $data)
+  {
 
-        $model->update($data);
-        $model->categories()->sync(Arr::get($data, 'categories', []));
-        $model->services()->sync(Arr::get($data, 'services', []));
-        $model->spaces()->sync(Arr::get($data, 'spaces', []));
+    $model->update($data);
+    $model->categories()->sync(Arr::get($data, 'categories', []));
+    $model->services()->sync(Arr::get($data, 'services', []));
+    $model->spaces()->sync(Arr::get($data, 'spaces', []));
+    $model->setTags(Arr::get($data, 'tags', []));
+    return $model;
+  }
 
-        return $model;
+  /**
+   * @inheritdoc
+   */
+  public function findBySlug($slug)
+  {
+    $query = $this->model->query();
+    if (method_exists($this->model, 'translations')) {
+      $query->whereHas('translations', function (Builder $q) use ($slug) {
+        $q->where('slug', $slug);
+      })->with('categories', 'city', 'category', 'translations', 'province');
+    } else {
+      $query->where('slug', $slug)->with('categories', 'city', 'category', 'province');
     }
+    $query->whereStatus(Status::ACTIVE);
+    return $query->firstOrFail();
+  }
 
-    /**
-     * @inheritdoc
-     */
-    public function findBySlug($slug)
-    {
-        $query=$this->model->query();
-        if (method_exists($this->model, 'translations')) {
-            $query->whereHas('translations', function (Builder $q) use ($slug) {
-                $q->where('slug', $slug);
-            })->with('categories', 'city', 'category', 'translations', 'province');
-        }else{
-            $query->where('slug', $slug)->with('categories', 'city', 'category', 'province');
-        }
-        $query->whereStatus(Status::ACTIVE);
-        return $query->firstOrFail();
-    }
-
-    public function whereCategory($id)
-    {
-        is_array($id) ? true : $id = [$id];
-        $query = $this->model->with('city', 'category', 'province');
-        $query->whereHas('categories', function (Builder $q) use ($id) {
-            $q->whereIn('category_id', $id);
-        });
-        $query->orderBy("created_at", "desc");
-        $query->whereStatus(Status::ACTIVE);
-        return $query->paginate(12);
-    }
+  public function whereCategory($id)
+  {
+    is_array($id) ? true : $id = [$id];
+    $query = $this->model->with('city', 'category', 'province');
+    $query->whereHas('categories', function (Builder $q) use ($id) {
+      $q->whereIn('category_id', $id);
+    });
+    $query->orderBy("created_at", "desc");
+    $query->whereStatus(Status::ACTIVE);
+    return $query->paginate(12);
+  }
 }
