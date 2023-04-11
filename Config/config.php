@@ -24,76 +24,76 @@ return [
     |--------------------------------------------------------------------------
     | example: 'logged.in' , 'auth.basic', 'throttle'
     */
-    'middlewares' => [],
+  'middlewares' => [],
 
-    /*Layout Posts - Index */
-    'layoutIndex' => [
-      'default' => 'three',
-      'options' => [
-        'four' => [
-          'name' => 'three',
-          'class' => 'col-6 col-md-4 col-lg-3',
-          'icon' => 'fa fa-th-large',
-          'status' => true
-        ],
-        'three' => [
-          'name' => 'three',
-          'class' => 'col-6 col-md-4 col-lg-4',
-          'icon' => 'fa fa-square-o',
-          'status' => true
-        ],
-        'one' => [
-          'name' => 'one',
-          'class' => 'col-12',
-          'icon' => 'fa fa-align-justify',
-          'status' => true
-        ],
-      ]
-    ],
+  /*Layout Posts - Index */
+  'layoutIndex' => [
+    'default' => 'three',
+    'options' => [
+      'four' => [
+        'name' => 'three',
+        'class' => 'col-6 col-md-4 col-lg-3',
+        'icon' => 'fa fa-th-large',
+        'status' => true
+      ],
+      'three' => [
+        'name' => 'three',
+        'class' => 'col-6 col-md-4 col-lg-4',
+        'icon' => 'fa fa-square-o',
+        'status' => true
+      ],
+      'one' => [
+        'name' => 'one',
+        'class' => 'col-12',
+        'icon' => 'fa fa-align-justify',
+        'status' => true
+      ],
+    ]
+  ],
 
-    "indexItemListAttributes" => [
-      'withCreatedDate' => true,
-      'withViewMoreButton' => true,
+  "indexItemListAttributes" => [
+    'withCreatedDate' => true,
+    'withViewMoreButton' => true,
 
-    ],
+  ],
   /*
     |--------------------------------------------------------------------------
     | Define custom middlewares to apply to the all frontend routes
     |--------------------------------------------------------------------------
     | example: 'logged.in' , 'auth.basic', 'throttle'
     */
-    'middlewares' => [],
+  'middlewares' => [],
 
-    /*Layout Posts - Index */
-    'layoutIndex' => [
-      'default' => 'three',
-      'options' => [
-        'four' => [
-          'name' => 'three',
-          'class' => 'col-6 col-md-4 col-lg-3',
-          'icon' => 'fa fa-th-large',
-          'status' => true
-        ],
-        'three' => [
-          'name' => 'three',
-          'class' => 'col-6 col-md-4 col-lg-4',
-          'icon' => 'fa fa-square-o',
-          'status' => true
-        ],
-        'one' => [
-          'name' => 'one',
-          'class' => 'col-12',
-          'icon' => 'fa fa-align-justify',
-          'status' => true
-        ],
-      ]
-    ],
+  /*Layout Posts - Index */
+  'layoutIndex' => [
+    'default' => 'three',
+    'options' => [
+      'four' => [
+        'name' => 'three',
+        'class' => 'col-6 col-md-4 col-lg-3',
+        'icon' => 'fa fa-th-large',
+        'status' => true
+      ],
+      'three' => [
+        'name' => 'three',
+        'class' => 'col-6 col-md-4 col-lg-4',
+        'icon' => 'fa fa-square-o',
+        'status' => true
+      ],
+      'one' => [
+        'name' => 'one',
+        'class' => 'col-12',
+        'icon' => 'fa fa-align-justify',
+        'status' => true
+      ],
+    ]
+  ],
 
-    "indexItemListAttributes" => [
-      'withCreatedDate' => true,
-      'withViewMoreButton' => true,
+  "indexItemListAttributes" => [
+    'withCreatedDate' => true,
+    'withViewMoreButton' => true,
 
-    ],
+  ],
 
   /*
 |--------------------------------------------------------------------------
@@ -170,4 +170,10 @@ return [
     "sidebar" => "col-lg-3",
     "posts" => "col-lg-9",
   ],
+
+  /*Translate keys of each entity. Based on the permission string*/
+  'documentation' => [
+    'places' => "iplaces::cms.documentation.places",
+    'categories' => "iplaces::cms.documentation.categories"
+  ]
 ];
