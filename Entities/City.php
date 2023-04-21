@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\Core\Traits\NamespacedEntity;
 use Modules\Ilocations\Entities\Province;
 use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Support\Traits\AuditTrait;
 
 class City extends Model
 {
-    use Translatable, PresentableTrait, NamespacedEntity;
+    use Translatable, PresentableTrait, NamespacedEntity, AuditTrait;
 
     protected $table = 'iplaces__cities';
     public $translatedAttributes = ['title','description'];

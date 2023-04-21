@@ -13,11 +13,11 @@ use Laracasts\Presenter\PresentableTrait;
 use Modules\Media\Support\Traits\MediaRelation;
 use Modules\Media\Entities\File;
 use Kalnoy\Nestedset\NodeTrait;
-
+use Modules\Core\Support\Traits\AuditTrait;
 
 class Category extends Model
 {
-  use Translatable, PresentableTrait, NamespacedEntity, MediaRelation, NodeTrait;
+  use Translatable, PresentableTrait, NamespacedEntity, MediaRelation, NodeTrait, AuditTrait;
 
   //use Sluggable;
 

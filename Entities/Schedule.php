@@ -6,10 +6,11 @@ use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Core\Traits\NamespacedEntity;
 use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Support\Traits\AuditTrait;
 
 class Schedule extends Model
 {
-  use Translatable, PresentableTrait, NamespacedEntity;
+  use Translatable, PresentableTrait, NamespacedEntity, AuditTrait;
 
   protected $table = 'iplaces__schedules';
   public $translatedAttributes = ['title'];

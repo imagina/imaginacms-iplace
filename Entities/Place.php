@@ -21,10 +21,11 @@ use Modules\Media\Support\Traits\MediaRelation;
 use Modules\Media\Entities\File;
 use Modules\Tag\Contracts\TaggableInterface;
 use Modules\Tag\Traits\TaggableTrait;
+use Modules\Core\Support\Traits\AuditTrait;
 
 class Place extends Model implements TaggableInterface
 {
-  use Translatable, PresentableTrait, NamespacedEntity, MediaRelation, TaggableTrait;
+  use Translatable, PresentableTrait, NamespacedEntity, MediaRelation, TaggableTrait, AuditTrait;
 
   protected $table = 'iplaces__places';
   public $translatedAttributes = [

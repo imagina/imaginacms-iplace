@@ -9,10 +9,11 @@ use Modules\Iplaces\Presenters\SpacePresenter;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Media\Support\Traits\MediaRelation;
 use Modules\Media\Entities\File;
+use Modules\Core\Support\Traits\AuditTrait;
 
 class Space extends Model
 {
-    use Translatable,PresentableTrait, MediaRelation;
+    use Translatable,PresentableTrait, MediaRelation, AuditTrait;
 
     protected $table = 'iplaces__spaces';
     public $translatedAttributes = ['title', 'description', 'slug','meta_title','meta_description','meta_keywords'];

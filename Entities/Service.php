@@ -11,10 +11,11 @@ use Modules\Core\Traits\NamespacedEntity;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Media\Support\Traits\MediaRelation;
 use Modules\Media\Entities\File;
+use Modules\Core\Support\Traits\AuditTrait;
 
 class Service extends Model
 {
-    use Translatable,PresentableTrait, NamespacedEntity, MediaRelation;
+    use Translatable,PresentableTrait, NamespacedEntity, MediaRelation, AuditTrait;
 
     protected $table = 'iplaces__services';
     public $translatedAttributes = ['title', 'description', 'slug','meta_title','meta_description','meta_keywords'];
