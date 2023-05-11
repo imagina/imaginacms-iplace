@@ -14,14 +14,20 @@ use Modules\Media\Support\Traits\MediaRelation;
 use Modules\Media\Entities\File;
 use Kalnoy\Nestedset\NodeTrait;
 use Modules\Core\Support\Traits\AuditTrait;
+use Modules\Isite\Traits\RevisionableTrait;
 
 class Category extends Model
 {
-  use Translatable, PresentableTrait, NamespacedEntity, MediaRelation, NodeTrait, AuditTrait;
+  use Translatable, PresentableTrait, NamespacedEntity, MediaRelation, NodeTrait, AuditTrait, RevisionableTrait;
 
   //use Sluggable;
 
+  public $transformer = 'Modules\Iplaces\Transformers\CategoryTransformer';
+  public $entity = 'Modules\Iplaces\Entities\Category';
+  public $repository = 'Modules\Iplaces\Repositories\CategoryRepository';
+
   protected $table = 'iplaces__categories';
+
   public $translatedAttributes = ['title',
     'description',
     'slug',
