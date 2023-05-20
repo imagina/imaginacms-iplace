@@ -22,6 +22,7 @@ use Modules\Iplaces\Entities\StatusYN;
 
 use Modules\Ilocations\Transformers\CityTransformer;
 use Modules\Ilocations\Transformers\ProvinceTransformer;
+use Modules\Isite\Transformers\RevisionTransformer;
 
 class PlaceTransformer extends JsonResource
 {
@@ -83,8 +84,9 @@ class PlaceTransformer extends JsonResource
       'zone' => new ZoneTransformer($this->whenLoaded('zone')),
       'province' => new ProvinceTransformer($this->whenLoaded('province')),
       'city' => new CityTransformer($this->whenLoaded('city')),
+      'revisions' => RevisionTransformer::collection($this->whenLoaded('revisions')),
     ];
-  
+
     foreach ($this->tags as $tag) {
       $data['tags'][] = $tag->name;
     }
