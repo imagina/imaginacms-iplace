@@ -168,6 +168,11 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
         $query->whereStatus($filter->status);
       }
 
+      if (isset($filter->id)) {
+        !is_array($filter->id) ? $filter->id = [$filter->id] : false;
+        $query->where('id', $filter->id);
+      }
+
     }
 
     /*== FIELDS ==*/

@@ -2,7 +2,6 @@
 
 namespace Modules\Iplaces\Entities;
 
-
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -22,12 +21,18 @@ use Modules\Media\Entities\File;
 use Modules\Tag\Contracts\TaggableInterface;
 use Modules\Tag\Traits\TaggableTrait;
 use Modules\Core\Support\Traits\AuditTrait;
+use Modules\Isite\Traits\RevisionableTrait;
 
 class Place extends Model implements TaggableInterface
 {
-  use Translatable, PresentableTrait, NamespacedEntity, MediaRelation, TaggableTrait, AuditTrait;
+  use Translatable, PresentableTrait, NamespacedEntity, MediaRelation, TaggableTrait, AuditTrait, RevisionableTrait;
+
+  public $transformer = 'Modules\Iplaces\Transformers\PlaceTransformer';
+  public $entity = 'Modules\Iplaces\Entities\Place';
+  public $repository = 'Modules\Iplaces\Repositories\PlaceRepository';
 
   protected $table = 'iplaces__places';
+
   public $translatedAttributes = [
     'title',
     'description',
