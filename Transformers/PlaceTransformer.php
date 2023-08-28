@@ -13,7 +13,7 @@ use Modules\User\Transformers\UserProfileTransformer;
 
 use Modules\Iplaces\Transformers\ZoneTransformer;
 use Modules\Iplaces\Transformers\ServiceTransformer;
-use Modules\Iplaces\Transformers\ScheduleTransformer;
+use Modules\Ischedulable\Transformers\ScheduleTransformer;
 
 use Modules\Iplaces\Entities\Gama;
 use Modules\Iplaces\Entities\Weather;
@@ -35,7 +35,6 @@ class PlaceTransformer extends JsonResource
   {
 
     $includes = explode(",", $request->include);
-
     $gama = new Gama();
     $weather = new Weather();
     $status = new Status();
@@ -71,10 +70,9 @@ class PlaceTransformer extends JsonResource
       'cityId' => $this->city_id,
       'provinceId' => $this->province_id,
       'zone' => $this->zone_id,
-      'schedule' => $this->schedule_id,
+      'schedule' => new ScheduleTransformer($this->whenLoaded('schedule')),
       'categoryId' => $this->category_id,
       'options' => $this->options,
-      'schedules' => $this->schedules,
       'mediaFiles' => $this->mediaFiles(),
       'rating' => $this->rating,
       'sortOrder' => $this->sort_order ?? 0,
