@@ -225,14 +225,24 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
 
   public function create($data)
   {
-    // dd($data);
+    //Event creating model
+    if (method_exists($this->model, 'creatingCrudModel'))
+      $this->model->creatingCrudModel(['data' => $data]);
+
     $place = $this->model->create($data);
     event(new PlaceWasCreated($place, $data));
     $place->categories()->sync(Arr::get($data, 'categories', []));
     $place->services()->sync(Arr::get($data, 'services', []));
     $place->spaces()->sync(Arr::get($data, 'spaces', []));
+
+    //Event created model
+    if (method_exists($place, 'createdCrudModel'))
+      $place->createdCrudModel(['data' => $data]);
+
     event(new CreateMedia($place, $data));
     $place->setTags(Arr::get($data, 'tags', []));
+
+    return $place;
   }
 
 
@@ -240,6 +250,10 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
   {
     /*== initialize query ==*/
     $query = $this->model->query();
+
+    //Event updating model
+    if (method_exists($this->model, 'updatingCrudModel'))
+      $this->model->updatingCrudModel(['data' => $data, 'params' => $params, 'criteria' => $criteria]);
 
     /*== FILTER ==*/
     if (isset($params->filter)) {
@@ -255,6 +269,10 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
     if ($model) {
       $model->update((array)$data);
       $model->categories()->sync(Arr::get($data, 'categories', []));
+
+      if (method_exists($model, 'updatedCrudModel'))
+        $model->updatedCrudModel(['data' => $data, 'params' => $params, 'criteria' => $criteria]);
+
       event(new UpdateMedia($model, $data));
       $model->setTags(Arr::get($data, 'tags', []));
     }
