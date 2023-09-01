@@ -56,7 +56,7 @@ class PublicController extends BasePublicController
             $category = $this->category->getItem($slugCategory, $paramsCat);
 
         $params = [
-          "include" => ["categories","city","zone","schedules","services", "translations"],
+          "include" => ["categories","city","zone","schedule","services", "translations"],
           "take" => false,
           "filter" => [
               "category" => $category->id ?? null
