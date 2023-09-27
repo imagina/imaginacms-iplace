@@ -11,6 +11,7 @@ class CategoryPresenter extends Presenter
      * @var \Modules\Iplaces\Entities\Status
      */
     protected $status;
+
     /**
      * @var \Modules\Iplaces\Repositories\CategoryRepository
      */
@@ -25,7 +26,6 @@ class CategoryPresenter extends Presenter
 
     /**
      * Get the post status
-     * @return string
      */
     public function status()
     {
@@ -34,7 +34,6 @@ class CategoryPresenter extends Presenter
 
     /**
      * Getting the label class for the appropriate status
-     * @return string
      */
     public function statusLabelClass()
     {
