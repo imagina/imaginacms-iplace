@@ -24,10 +24,11 @@ use Modules\Tag\Traits\TaggableTrait;
 use Modules\Core\Support\Traits\AuditTrait;
 use Modules\Isite\Traits\RevisionableTrait;
 use Modules\Ischedulable\Support\Traits\Schedulable;
+use Modules\Iqreable\Traits\IsQreable;
 
 class Place extends CrudModel implements TaggableInterface
 {
-  use Translatable, PresentableTrait, NamespacedEntity, Schedulable, MediaRelation, TaggableTrait, AuditTrait, RevisionableTrait;
+  use Translatable, PresentableTrait, NamespacedEntity, Schedulable, MediaRelation, TaggableTrait, AuditTrait, RevisionableTrait, IsQreable;
 
   public $transformer = 'Modules\Iplaces\Transformers\PlaceTransformer';
   public $entity = 'Modules\Iplaces\Entities\Place';

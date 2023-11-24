@@ -15,10 +15,11 @@ use Modules\Media\Entities\File;
 use Kalnoy\Nestedset\NodeTrait;
 use Modules\Core\Support\Traits\AuditTrait;
 use Modules\Isite\Traits\RevisionableTrait;
+use Modules\Iqreable\Traits\IsQreable;
 
 class Category extends Model
 {
-  use Translatable, PresentableTrait, NamespacedEntity, MediaRelation, NodeTrait, AuditTrait, RevisionableTrait;
+  use Translatable, PresentableTrait, NamespacedEntity, MediaRelation, NodeTrait, AuditTrait, RevisionableTrait, IsQreable;
 
   //use Sluggable;
 

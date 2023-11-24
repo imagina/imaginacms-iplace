@@ -6,6 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\User\Transformers\UserProfileTransformer;
 use Modules\Iplaces\Events\CategoryWasCreated;
 use Modules\Isite\Transformers\RevisionTransformer;
+use Modules\Iqreable\Transformers\QrTransformer;
 
 class CategoryTransformer extends JsonResource
 {
@@ -29,6 +30,8 @@ class CategoryTransformer extends JsonResource
       'updatedAt' => $this->when($this->updated_ay, $this->updated_ay),
       'parent' => new CategoryTransformer($this->whenLoaded('parent')),
       'revisions' => RevisionTransformer::collection($this->whenLoaded('revisions')),
+      'url' => $this->url,
+      'qrs' => QrTransformer::collection($this->whenLoaded('qrs')),
     ];
 
     $filter = json_decode($request->filter);

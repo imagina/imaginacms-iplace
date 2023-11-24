@@ -23,6 +23,7 @@ use Modules\Iplaces\Entities\StatusYN;
 use Modules\Ilocations\Transformers\CityTransformer;
 use Modules\Ilocations\Transformers\ProvinceTransformer;
 use Modules\Isite\Transformers\RevisionTransformer;
+use Modules\Iqreable\Transformers\QrTransformer;
 
 class PlaceTransformer extends JsonResource
 {
@@ -84,6 +85,8 @@ class PlaceTransformer extends JsonResource
       'province' => new ProvinceTransformer($this->whenLoaded('province')),
       'city' => new CityTransformer($this->whenLoaded('city')),
       'revisions' => RevisionTransformer::collection($this->whenLoaded('revisions')),
+      'url' => $this->url,
+      'qrs' => QrTransformer::collection($this->whenLoaded('qrs')),
     ];
 
     foreach ($this->tags as $tag) {
