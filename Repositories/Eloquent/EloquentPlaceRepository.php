@@ -49,8 +49,8 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
       if (isset($filter->categories) && !empty($filter->categories)) {
         is_array($filter->categories) ? true : $filter->categories = [$filter->categories];
         $query->where(function ($query) use ($filter) {
-          $query->whereRaw("iplaces__places.id IN (SELECT place_id from iplaces__place_category where category_id IN (" . (join(",", $filter->categories->pluck("id")->toArray())) . "))")
-            ->orWhereIn('iplaces__places.category_id', $filter->categories->pluck("id"));
+          $query->whereRaw("iplaces__places.id IN (SELECT place_id from iplaces__place_category where category_id IN (" . (join(",", $filter->categories)) . "))")
+            ->orWhereIn('iplaces__places.category_id', $filter->categories);
         });
       }
 
