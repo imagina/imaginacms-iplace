@@ -113,7 +113,7 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
         });
 
         /*
-  
+
         // removing symbols used by MySQL
         $filter->search = preg_replace("/[^a-zA-Z0-9]+/", " ", $filter->search);
         $words = explode(" ", $filter->search);//Explode
@@ -128,7 +128,7 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
         //Search query
         $query->leftJoin(\DB::raw(
           "(SELECT MATCH (title) AGAINST ('(" . implode(" ", $words) . ") (" . $filter->search . ")' IN BOOLEAN MODE) scoreSearch,
-          
+
           place_id, title " .
           "from iplaces__place_translations " .
           "where `locale` = '".($filter->locale ?? locale())."') as ptrans"
@@ -240,7 +240,6 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
       $place->createdCrudModel(['data' => $data]);
 
     event(new CreateMedia($place, $data));
-    $place->setTags(Arr::get($data, 'tags', []));
 
     return $place;
   }
@@ -274,10 +273,7 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
         $model->updatedCrudModel(['data' => $data, 'params' => $params, 'criteria' => $criteria]);
 
       event(new UpdateMedia($model, $data));
-      $model->setTags(Arr::get($data, 'tags', []));
     }
-
-
   }
 
   public function deleteBy($criteria, $params = false)
@@ -302,12 +298,10 @@ class EloquentPlaceRepository extends EloquentBaseRepository implements PlaceRep
 
   public function update($model, $data)
   {
-
     $model->update($data);
     $model->categories()->sync(Arr::get($data, 'categories', []));
     $model->services()->sync(Arr::get($data, 'services', []));
     $model->spaces()->sync(Arr::get($data, 'spaces', []));
-    $model->setTags(Arr::get($data, 'tags', []));
     return $model;
   }
 
