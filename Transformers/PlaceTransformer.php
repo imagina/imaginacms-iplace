@@ -16,7 +16,7 @@ use Modules\Iplaces\Entities\Status;
 use Modules\Iplaces\Entities\StatusYN;
 use Modules\Iplaces\Entities\Weather;
 use Modules\Isite\Transformers\RevisionTransformer;
-use Modules\Ischedulable\Transformers\ScheduleTransformer;
+use Modules\Iqreable\Transformers\QrTransformer;
 
 class PlaceTransformer extends JsonResource
 {
@@ -65,15 +65,17 @@ class PlaceTransformer extends JsonResource
             'mediaFiles' => $this->mediaFiles(),
             'rating' => $this->rating,
       'sortOrder' => $this->sort_order ?? 0,
-            //Relations
-            'services' => ServiceTransformer::collection($this->whenLoaded('services')),
-            'category' => new CategoryTransformer($this->whenLoaded('category')),
-            'categories' => CategoryTransformer::collection($this->whenLoaded('categories')),
-            'zone' => new ZoneTransformer($this->whenLoaded('zone')),
-            'province' => new ProvinceTransformer($this->whenLoaded('province')),
-            'city' => new CityTransformer($this->whenLoaded('city')),
-            'revisions' => RevisionTransformer::collection($this->whenLoaded('revisions')),
-        ];
+      //Relations
+      'services' => ServiceTransformer::collection($this->whenLoaded('services')),
+      'category' => new CategoryTransformer($this->whenLoaded('category')),
+      'categories' => CategoryTransformer::collection($this->whenLoaded('categories')),
+      'zone' => new ZoneTransformer($this->whenLoaded('zone')),
+      'province' => new ProvinceTransformer($this->whenLoaded('province')),
+      'city' => new CityTransformer($this->whenLoaded('city')),
+      'revisions' => RevisionTransformer::collection($this->whenLoaded('revisions')),
+      'url' => $this->url,
+      'qrs' => QrTransformer::collection($this->whenLoaded('qrs')),
+    ];
 
         foreach ($this->tags as $tag) {
             $data['tags'][] = $tag->name;

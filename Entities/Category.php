@@ -3,20 +3,23 @@
 namespace Modules\Iplaces\Entities;
 
 use Astrotomic\Translatable\Translatable;
-use Cviebrock\EloquentSluggable\Sluggable;
 use http\Url;
 use Illuminate\Database\Eloquent\Model;
-use Kalnoy\Nestedset\NodeTrait;
-use Laracasts\Presenter\PresentableTrait;
-use Modules\Core\Support\Traits\AuditTrait;
-use Modules\Core\Traits\NamespacedEntity;
+use Cviebrock\EloquentSluggable\Sluggable;
 use Modules\Iplaces\Presenters\CategoryPresenter;
-use Modules\Isite\Traits\RevisionableTrait;
+use Modules\Iplaces\Events\CategoryWasCreated;
+use Modules\Core\Traits\NamespacedEntity;
+use Laracasts\Presenter\PresentableTrait;
 use Modules\Media\Support\Traits\MediaRelation;
+use Modules\Media\Entities\File;
+use Kalnoy\Nestedset\NodeTrait;
+use Modules\Core\Support\Traits\AuditTrait;
+use Modules\Isite\Traits\RevisionableTrait;
+use Modules\Iqreable\Traits\IsQreable;
 
 class Category extends Model
 {
-    use Translatable, PresentableTrait, NamespacedEntity, MediaRelation, NodeTrait, AuditTrait, RevisionableTrait;
+  use Translatable, PresentableTrait, NamespacedEntity, MediaRelation, NodeTrait, AuditTrait, RevisionableTrait, IsQreable;
 
     //use Sluggable;
 
