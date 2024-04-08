@@ -7,25 +7,29 @@ use Modules\Isite\Transformers\RevisionTransformer;
 
 class CategoryTransformer extends JsonResource
 {
-    public function toArray($request)
-    {
-        $data = [
-            'id' => $this->when(isset($this->id), $this->id),
-            'title' => $this->when(isset($this->title), $this->title),
-            'slug' => $this->when(isset($this->slug), $this->slug),
-            'description' => $this->when(isset($this->description), $this->description),
-            'status' => $this->status ? 1 : null,
-            'parentId' => $this->when(isset($this->parent_id), $this->parent_id),
-            'metaTitle' => $this->when($this->meta_title, $this->meta_title),
-            'options' => $this->when($this->options, $this->options),
-            'metaDescription' => $this->when($this->meta_description, $this->meta_description),
-            'metaKeywords' => $this->when($this->meta_keywords, $this->meta_keywords),
-            'mainImage' => $this->main_image,
-            'createdAt' => $this->when($this->created_at, $this->created_at),
-            'updatedAt' => $this->when($this->updated_ay, $this->updated_ay),
-            'parent' => new CategoryTransformer($this->whenLoaded('parent')),
-            'revisions' => RevisionTransformer::collection($this->whenLoaded('revisions')),
-        ];
+
+  public function toArray($request)
+  {
+
+    $data = [
+      'id' => $this->when(isset($this->id), $this->id),
+      'title' => $this->when(isset($this->title), $this->title),
+      'slug' => $this->when(isset($this->slug), $this->slug),
+      'description' => $this->when(isset($this->description), $this->description),
+      'status' => $this->status ? 1 : null,
+      'parentId' => $this->when(isset($this->parent_id), $this->parent_id),
+      'metaTitle' => $this->when($this->meta_title, $this->meta_title),
+      'options' => $this->when($this->options, $this->options),
+      'metaDescription' => $this->when($this->meta_description, $this->meta_description),
+      'metaKeywords' => $this->when($this->meta_keywords, $this->meta_keywords),
+      'mainImage' => $this->main_image,
+      'createdAt' => $this->when($this->created_at, $this->created_at),
+      'updatedAt' => $this->when($this->updated_ay, $this->updated_ay),
+      'parent' => new CategoryTransformer($this->whenLoaded('parent')),
+      'revisions' => RevisionTransformer::collection($this->whenLoaded('revisions')),
+      'url' => $this->url,
+      'qrs' => QrTransformer::collection($this->whenLoaded('qrs')),
+    ];
 
         $filter = json_decode($request->filter);
 

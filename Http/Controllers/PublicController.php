@@ -39,7 +39,7 @@ class PublicController extends BasePublicController
     /**
      * @return mixed
      */
-    public function index($slugCategory, Request $request)
+    public function index($slugCategory = null, Request $request)
     {
         $category = null;
         $paramsCat = [
