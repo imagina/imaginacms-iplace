@@ -17,6 +17,7 @@ use Modules\Iplaces\Entities\StatusYN;
 use Modules\Iplaces\Entities\Weather;
 use Modules\Isite\Transformers\RevisionTransformer;
 use Modules\Iqreable\Transformers\QrTransformer;
+use Modules\Ischedulable\Transformers\ScheduleTransformer;
 
 class PlaceTransformer extends JsonResource
 {

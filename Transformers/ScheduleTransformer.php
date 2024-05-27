@@ -9,6 +9,7 @@
 namespace Modules\Iplaces\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\Core\Icrud\Transformers\CrudResource;
 
 class ScheduleTransformer extends JsonResource
 {
