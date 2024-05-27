@@ -4,6 +4,7 @@ namespace Modules\Iplaces\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Isite\Transformers\RevisionTransformer;
+use Modules\Qreable\Transformers\QrTransformer;
 
 class CategoryTransformer extends JsonResource
 {
