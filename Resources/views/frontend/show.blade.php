@@ -65,12 +65,14 @@
 
 
                     <div class="row mt-4 data-general">
+                        @if(isset($place->city) && isset($place->province))
                         <div class="col-6 col-sm-4 col-lg-2 d-flex my-3">
                             <div class="d-inline-block">
                                 <h6><i class="fa fa-map-marker"></i> Ubicación:</h6>
                                 {{$place->city->translate('es')->name}}, {{$place->province->translate('es')->name}}
                             </div>
                         </div>
+                        @endif
                         <div class="col-6 col-sm-4 col-lg-2 d-flex my-3">
                             <img class="d-inline-block mr-2" src="{{Theme::url('img/icon/lugar.png')}}">
 
