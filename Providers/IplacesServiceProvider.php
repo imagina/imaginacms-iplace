@@ -2,15 +2,17 @@
 
 namespace Modules\Iplaces\Providers;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
-use Modules\Core\Traits\CanPublishConfiguration;
 use Modules\Core\Events\BuildingSidebar;
 use Modules\Core\Events\LoadingBackendTranslations;
+use Modules\Core\Traits\CanPublishConfiguration;
 use Modules\Iplaces\Events\Handlers\RegisterIplacesSidebar;
 
 class IplacesServiceProvider extends ServiceProvider
 {
     use CanPublishConfiguration;
+
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -20,20 +22,18 @@ class IplacesServiceProvider extends ServiceProvider
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
     public function register()
     {
         $this->registerBindings();
-          $this->app['events']->listen(BuildingSidebar::class, RegisterIplacesSidebar::class);
+        $this->app['events']->listen(BuildingSidebar::class, RegisterIplacesSidebar::class);
         $this->app['events']->listen(LoadingBackendTranslations::class, function (LoadingBackendTranslations $event) {
-            $event->load('places', array_dot(trans('iplaces::places')));
-            $event->load('categories', array_dot(trans('iplaces::categories')));
-            $event->load('services', array_dot(trans('iplaces::services')));
-            $event->load('zones', array_dot(trans('iplaces::zones')));
-            $event->load('spaces', array_dot(trans('iplaces::spaces')));
-            $event->load('cities', array_dot(trans('iplaces::cities')));
+            $event->load('places', Arr::dot(trans('iplaces::places')));
+            $event->load('categories', Arr::dot(trans('iplaces::categories')));
+            $event->load('services', Arr::dot(trans('iplaces::services')));
+            $event->load('zones', Arr::dot(trans('iplaces::zones')));
+            $event->load('spaces', Arr::dot(trans('iplaces::spaces')));
+            $event->load('cities', Arr::dot(trans('iplaces::cities')));
         });
     }
 
@@ -42,17 +42,18 @@ class IplacesServiceProvider extends ServiceProvider
         $this->publishConfig('iplaces', 'permissions');
         $this->publishConfig('iplaces', 'settings');
         $this->publishConfig('iplaces', 'config');
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->publishConfig('iplaces', 'crud-fields');
+        $this->mergeConfigFrom($this->getModuleConfigFilePath('iplaces', 'cmsPages'), 'asgard.iplaces.cmsPages');
+        $this->mergeConfigFrom($this->getModuleConfigFilePath('iplaces', 'cmsSidebar'), 'asgard.iplaces.cmsSidebar');
+        //$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
     }
 
     /**
      * Get the services provided by the provider.
-     *
-     * @return array
      */
     public function provides()
     {
-        return array();
+        return [];
     }
 
     private function registerBindings()
@@ -142,11 +143,6 @@ class IplacesServiceProvider extends ServiceProvider
                 return new \Modules\Iplaces\Repositories\Cache\CacheCityDecorator($repository);
             }
         );
-// add bindings
-
-
-
-
-
+        // add bindings
     }
 }

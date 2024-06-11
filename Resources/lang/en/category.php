@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'single' => 'Categoría',
+    'plural' => 'Categorías',
+
     'list resource' => 'List categories',
     'create resource' => 'Create categories',
     'edit resource' => 'Edit categories',
@@ -14,21 +17,21 @@ return [
         'create category' => 'Create a category',
     ],
     'table' => [
-        'id'=>'Id',
-        'title'=>'Title',
-        'slug'=>'Slug',
-        'status'=>'Status',
+        'id' => 'Id',
+        'title' => 'Title',
+        'slug' => 'Slug',
+        'status' => 'Status',
         'parent' => 'Parent',
 
     ],
     'form' => [
-        'title'=>'Title',
-        'description'=>'Description',
-        'status'=>'Status',
-        'slug'=>'Slug',
-        'Image'=>'Image',
-        'select photo'=>'Select photo',
-        'summary'=>'Summary'
+        'title' => 'Title',
+        'description' => 'Description',
+        'status' => 'Status',
+        'slug' => 'Slug',
+        'Image' => 'Image',
+        'select photo' => 'Select photo',
+        'summary' => 'Summary',
     ],
     'messages' => [
     ],

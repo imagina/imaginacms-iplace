@@ -1,14 +1,12 @@
 <?php
 
-
 namespace Modules\Iplaces\Transformers;
 
-use Illuminate\Http\Resources\Json\Resource;
-use Modules\User\Transformers\UserProfileTransformer;
-use Modules\Iplaces\Events\CategoryWasCreated;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\Isite\Transformers\RevisionTransformer;
+use Modules\Qreable\Transformers\QrTransformer;
 
-
-class CategoryTransformer extends Resource
+class CategoryTransformer extends JsonResource
 {
 
   public function toArray($request)
@@ -20,7 +18,7 @@ class CategoryTransformer extends Resource
       'slug' => $this->when(isset($this->slug), $this->slug),
       'description' => $this->when(isset($this->description), $this->description),
       'status' => $this->status ? 1 : null,
-      'parentId' => $this->when(isset($this->parent_id),$this->parent_id),
+      'parentId' => $this->when(isset($this->parent_id), $this->parent_id),
       'metaTitle' => $this->when($this->meta_title, $this->meta_title),
       'options' => $this->when($this->options, $this->options),
       'metaDescription' => $this->when($this->meta_description, $this->meta_description),
@@ -29,32 +27,32 @@ class CategoryTransformer extends Resource
       'createdAt' => $this->when($this->created_at, $this->created_at),
       'updatedAt' => $this->when($this->updated_ay, $this->updated_ay),
       'parent' => new CategoryTransformer($this->whenLoaded('parent')),
+      'revisions' => RevisionTransformer::collection($this->whenLoaded('revisions')),
+      'url' => $this->url,
+      'qrs' => QrTransformer::collection($this->whenLoaded('qrs')),
     ];
 
-    $filter = json_decode($request->filter);
+        $filter = json_decode($request->filter);
 
-    // Return data with available translations
-    if (isset($filter->allTranslations) && $filter->allTranslations) {
-      // Get langs avaliables
-      $languages = \LaravelLocalization::getSupportedLocales();
+        // Return data with available translations
+        if (isset($filter->allTranslations) && $filter->allTranslations) {
+            // Get langs avaliables
+            $languages = \LaravelLocalization::getSupportedLocales();
 
-      foreach ($languages as $lang => $value) {
-        $data[$lang]['title'] = $this->hasTranslation($lang) ?
-          $this->translate("$lang")['title'] : '';
-        $data[$lang]['description'] = $this->hasTranslation($lang) ?
-          $this->translate("$lang")['description'] ?? '' : '';
-        $data[$lang]['slug'] = $this->hasTranslation($lang) ?
-          $this->translate("$lang")['slug'] : '';
-        $data[$lang]['metaTitle'] = $this->hasTranslation($lang) ?
-          $this->translate("$lang")['meta_title'] : '';
-        $data[$lang]['metaDescription'] = $this->hasTranslation($lang) ?
-          $this->translate("$lang")['meta_description'] : '';
-      }
+            foreach ($languages as $lang => $value) {
+                $data[$lang]['title'] = $this->hasTranslation($lang) ?
+                  $this->translate("$lang")['title'] : '';
+                $data[$lang]['description'] = $this->hasTranslation($lang) ?
+                  $this->translate("$lang")['description'] ?? '' : '';
+                $data[$lang]['slug'] = $this->hasTranslation($lang) ?
+                  $this->translate("$lang")['slug'] : '';
+                $data[$lang]['metaTitle'] = $this->hasTranslation($lang) ?
+                  $this->translate("$lang")['meta_title'] : '';
+                $data[$lang]['metaDescription'] = $this->hasTranslation($lang) ?
+                  $this->translate("$lang")['meta_description'] : '';
+            }
+        }
+
+        return $data;
     }
-    return $data;
-
-
-  }
-
-
 }

@@ -2,32 +2,26 @@
 
 namespace Modules\Iplaces\Transformers;
 
-use Illuminate\Http\Resources\Json\Resource;
-use Modules\User\Transformers\UserProfileTransformer;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class ZoneTransformer extends Resource
+class ZoneTransformer extends JsonResource
 {
-
     public function toArray($request)
     {
-
         return [
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
             'options' => $options,
             'createdAt' => ($this->created_at),
-            'updatedAt' => ($this->updated_at)
+            'updatedAt' => ($this->updated_at),
         ];
 
-       /* if (in_array('service',$includes)) {
+        /* if (in_array('service',$includes)) {
 
-            $data['service']= ServiceTransformers::collection($this->services);
-        }
-        return $data;
+             $data['service']= ServiceTransformers::collection($this->services);
+         }
+         return $data;
 */
-
     }
-
-
 }

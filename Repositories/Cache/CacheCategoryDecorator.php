@@ -2,8 +2,8 @@
 
 namespace Modules\Iplaces\Repositories\Cache;
 
-use Modules\Iplaces\Repositories\CategoryRepository;
 use Modules\Core\Repositories\Cache\BaseCacheDecorator;
+use Modules\Iplaces\Repositories\CategoryRepository;
 
 class CacheCategoryDecorator extends BaseCacheDecorator implements CategoryRepository
 {
@@ -21,22 +21,21 @@ class CacheCategoryDecorator extends BaseCacheDecorator implements CategoryRepos
         });
     }
 
-    public function getItem($criteria, $params)
+    public function getItem($criteria, $params = false)
     {
         return $this->remember(function () use ($criteria, $params) {
             return $this->repository->getItem($criteria, $params);
         });
     }
 
-
-    public function updateBy($criteria, $data, $params)
+    public function updateBy($criteria, $data, $params = false)
     {
         return $this->remember(function () use ($criteria, $data, $params) {
             return $this->repository->updateBy($criteria, $data, $params);
         });
     }
 
-    public function deleteBy($criteria, $params)
+    public function deleteBy($criteria, $params = false)
     {
         return $this->remember(function () use ($criteria, $params) {
             return $this->repository->deleteBy($criteria, $params);

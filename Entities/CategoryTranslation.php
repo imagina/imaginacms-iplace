@@ -47,7 +47,5 @@ class CategoryTranslation extends Model
         } else {
             $this->attributes['meta_keywords'] =  $this->attributes['title'];
         }
-
     }
-
 }

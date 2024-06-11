@@ -1,16 +1,14 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
-class CreateIplacesServiceTranslationsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('iplaces__service_translations', function (Blueprint $table) {
             $table->engine = 'InnoDB';
@@ -33,14 +31,12 @@ class CreateIplacesServiceTranslationsTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('iplaces__service_translations', function (Blueprint $table) {
             $table->dropForeign(['service_id']);
         });
         Schema::dropIfExists('iplaces__service_translations');
     }
-}
+};
