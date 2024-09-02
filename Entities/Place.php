@@ -25,10 +25,12 @@ use Modules\Core\Support\Traits\AuditTrait;
 use Modules\Isite\Traits\RevisionableTrait;
 use Modules\Ischedulable\Support\Traits\Schedulable;
 use Modules\Iqreable\Traits\IsQreable;
+use Modules\Core\Icrud\Traits\HasCacheClearable;
 
 class Place extends CrudModel implements TaggableInterface
 {
-  use Translatable, PresentableTrait, NamespacedEntity, Schedulable, MediaRelation, TaggableTrait, AuditTrait, RevisionableTrait, IsQreable;
+  use Translatable, PresentableTrait, NamespacedEntity, Schedulable, MediaRelation, TaggableTrait, AuditTrait,
+      RevisionableTrait, IsQreable, HasCacheClearable;
 
     public $transformer = 'Modules\Iplaces\Transformers\PlaceTransformer';
 
@@ -278,4 +280,15 @@ class Place extends CrudModel implements TaggableInterface
     {
         $this->attributes['schedules'] = json_encode($value);
     }
+
+    public function getCacheClearableData()
+    {
+        return [
+            'urls' => array_merge(
+                [config("app.url"),
+                    $this->url],
+                $this->categories->pluck('url')->toArray())
+        ];
+    }
+
 }
