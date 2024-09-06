@@ -16,10 +16,12 @@ use Kalnoy\Nestedset\NodeTrait;
 use Modules\Core\Support\Traits\AuditTrait;
 use Modules\Isite\Traits\RevisionableTrait;
 use Modules\Iqreable\Traits\IsQreable;
+use Modules\Core\Icrud\Traits\HasCacheClearable;
 
 class Category extends Model
 {
-  use Translatable, PresentableTrait, NamespacedEntity, MediaRelation, NodeTrait, AuditTrait, RevisionableTrait, IsQreable;
+  use Translatable, PresentableTrait, NamespacedEntity, MediaRelation, NodeTrait, AuditTrait, RevisionableTrait,
+      IsQreable, HasCacheClearable;
 
     //use Sluggable;
 
@@ -179,4 +181,15 @@ class Category extends Model
     {
         return 'parent_id';
     }
+
+    public function getCacheClearableData()
+    {
+        return [
+            'urls' => [
+                config("app.url"),
+                $this->url
+            ]
+        ];
+    }
+
 }

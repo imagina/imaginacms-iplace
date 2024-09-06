@@ -10,10 +10,11 @@ use Modules\Core\Support\Traits\AuditTrait;
 use Modules\Core\Traits\NamespacedEntity;
 use Modules\Iplaces\Presenters\ServicePresenter;
 use Modules\Media\Support\Traits\MediaRelation;
+use Modules\Core\Icrud\Traits\HasCacheClearable;
 
 class Service extends Model
 {
-    use Translatable,PresentableTrait, NamespacedEntity, MediaRelation, AuditTrait;
+    use Translatable,PresentableTrait, NamespacedEntity, MediaRelation, AuditTrait, HasCacheClearable;
 
     protected $table = 'iplaces__services';
 
@@ -85,4 +86,15 @@ class Service extends Model
     {
         return $query->whereStatus(Status::INACTIVE);
     }*/
+
+    public function getCacheClearableData()
+    {
+        return [
+            'urls' => [
+                config("app.url"),
+                $this->url
+            ]
+        ];
+    }
+
 }

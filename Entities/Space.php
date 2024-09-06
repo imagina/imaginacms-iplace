@@ -9,10 +9,11 @@ use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Support\Traits\AuditTrait;
 use Modules\Iplaces\Presenters\SpacePresenter;
 use Modules\Media\Support\Traits\MediaRelation;
+use Modules\Core\Icrud\Traits\HasCacheClearable;
 
 class Space extends Model
 {
-    use Translatable,PresentableTrait, MediaRelation, AuditTrait;
+    use Translatable,PresentableTrait, MediaRelation, AuditTrait, HasCacheClearable;
 
     protected $table = 'iplaces__spaces';
 
@@ -65,4 +66,15 @@ class Space extends Model
 
         return $response;
     }
+
+    public function getCacheClearableData()
+    {
+        return [
+            'urls' => [
+                config("app.url"),
+                $this->url
+            ]
+        ];
+    }
+
 }
